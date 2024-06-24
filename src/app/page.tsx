@@ -120,7 +120,7 @@ export default function Home() {
   return (
     <section
       id="PAGE"
-      className="bg-white font-bold text-black text-md py-8 px-8 flex items-center justify-center">
+      className="font-bold text-black text-md py-8 px-8 flex items-center justify-center">
       <section // SECTIONS
         id="SECTIONS"
         className="m-4">
