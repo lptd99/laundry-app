@@ -1,0 +1,54 @@
+{
+  "MachineOptions": [
+    {
+      "id": 1,
+      "temperature": "Cold",
+      "care": "Regular",
+      "operation": "Wash",
+      "condition": "Old",
+      "price": 2.85
+    },
+    {
+      "id": 2,
+      "temperature": "Warm",
+      "care": "Regular",
+      "operation": "Wash",
+      "condition": "Old",
+      "price": 3.1
+    },
+    {
+      "id": 3,
+      "temperature": "Hot",
+      "care": "Regular",
+      "operation": "Wash",
+      "condition": "Old",
+      "price": 3.35
+    },
+    {
+      "id": 4,
+      "temperature": "Any",
+      "care": "Regular",
+      "operation": "Wash",
+      "condition": "New",
+      "price": 3.75
+    },
+    {
+      "id": 5,
+      "temperature": "Any",
+      "care": "Regular",
+      "operation": "Dry",
+      "condition": "Old",
+      "price": 2.65
+    },
+    {
+      "id": 6,
+      "temperature": "Any",
+      "care": "Regular",
+      "operation": "Dry",
+      "condition": "New",
+      "price": 2.65
+    }
+  ],
+  "AcceptedBills": [5, 10, 20],
+  "Balance": 0
+}
