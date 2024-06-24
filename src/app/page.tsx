@@ -1,113 +1,271 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+
+interface MachineOption {
+  id: number;
+  temperature: string; // Cold, Warm, Hot
+  care: string; // Regular, Delicate, Permanent Press
+  operation: string; // Wash or Dry
+  condition: string; // Old or New
+  price: number;
+}
+
+interface Transaction {
+  id: number;
+  owner: string;
+  value: number;
+  operation: string;
+  date: Date;
+}
 
 export default function Home() {
+  const [balance, setBalance] = useState(0);
+  const [owner, setOwner] = useState("Someone");
+
+  const [transactions, setTransactions] = useState([] as Transaction[]);
+  const [suggestions, setSuggestions] = useState([] as string[]);
+  const [acceptedBills, setAcceptedBills] = useState([] as number[]);
+  const [machineOptions, setMachineOptions] = useState([] as MachineOption[]);
+
+  function getMachineOptions() {
+    setMachineOptions([
+      {
+        id: 1,
+        temperature: "Cold",
+        care: "Regular",
+        operation: "Wash",
+        condition: "Old",
+        price: 2.85,
+      },
+      {
+        id: 2,
+        temperature: "Warm",
+        care: "Regular",
+        operation: "Wash",
+        condition: "Old",
+        price: 3.1,
+      },
+      {
+        id: 3,
+        temperature: "Hot",
+        care: "Regular",
+        operation: "Wash",
+        condition: "Old",
+        price: 3.35,
+      },
+      {
+        id: 4,
+        temperature: "Any",
+        care: "Regular",
+        operation: "Wash",
+        condition: "New",
+        price: 3.75,
+      },
+      {
+        id: 5,
+        temperature: "Any",
+        care: "Regular",
+        operation: "Dry",
+        condition: "Old",
+        price: 2.65,
+      },
+      {
+        id: 6,
+        temperature: "Any",
+        care: "Regular",
+        operation: "Dry",
+        condition: "New",
+        price: 2.65,
+      },
+    ]);
+  }
+
+  function getAcceptedBills() {
+    setAcceptedBills([5, 10, 20]);
+  }
+
+  function addBalance(value: number) {
+    setBalance(balance + value);
+    addTransaction(owner, value, new Date());
+  }
+
+  function addTransaction(owner: string, value: number, date: Date) {
+    const transaction: Transaction = {
+      id: transactions.length,
+      owner: owner,
+      value: value,
+      date: date,
+      operation: value >= 0 ? "add" : "remove",
+    };
+    setTransactions([transaction, ...transactions]);
+  }
+
+  function removeBalance(value: number) {
+    if (balance - value >= 0) {
+      addBalance(value * -1);
+    }
+  }
+
+  useEffect(() => {
+    getMachineOptions();
+    getAcceptedBills();
+    humanizeMachineOptions();
+  }, []);
+
+  function humanizeMachineOptions() {
+    //
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <section
+      id="PAGE"
+      className="bg-white font-bold text-black text-md py-8 px-8 flex items-center justify-center">
+      <section // SECTIONS
+        id="SECTIONS"
+        className="m-4">
+        <section // SECTION_BALANCE
+          id="SECTION_BALANCE"
+          className="flex flex-row items-start">
+          <section // SECTION_BALANCE_INFO
+            id="SECTION_BALANCE_INFO"
+            className="flex flex-col items-center">
+            <label
+              id="BALANCE_LABEL"
+              className="text-xl font-semibold">
+              {`Current balance: ${
+                balance >= 0
+                  ? "$" + balance.toFixed(2)
+                  : "-$" + balance.toFixed(2).replace("-", "")
+              }`}
+            </label>
+            <label className="mt-8">User:</label>
+            <input
+              type="text"
+              placeholder="User"
+              className="text-center w-32 border-2 border-gray-300 rounded-md"
+              onChange={(event) => setOwner(event.target.value)}></input>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            <section // BALANCE_ADD_BUTTONS
+              id="BALANCE_ADD_BUTTONS"
+              className="flex flex-col items-center mx-10 my-10">
+              {acceptedBills.map((bill) => (
+                <button
+                  id={`BALANCE_ADD_${bill}`}
+                  key={`BALANCE_ADD_${bill}`}
+                  className="
+                rounded-lg
+                bg-green-300 hover:bg-green-200
+                border-green-400 hover:border-green-300 border-b-4
+                text-black
+                font-semibold
+                text-sm
+                py-2
+                px-4
+                flex flex-row justify-center
+                m-2 "
+                  onClick={() => addBalance(bill)}>
+                  Add ${bill}
+                </button>
+              ))}
+            </section>
+          </section>
+          <section // SECTION_MACHINE_OPTIONS
+            id="SECTION_MACHINE_OPTIONS"
+            className="flex flex-col items-center m-4">
+            <section // MACHINE_OPTIONS_WASH
+              id="MACHINE_OPTIONS_WASH">
+              <label className="flex justify-center mt-4">Wash Options:</label>
+              {machineOptions
+                .filter((machineOption) => machineOption.operation === "Wash")
+                .map((machineOption) => (
+                  <button
+                    className="
+                rounded-lg
+                bg-red-300 hover:bg-red-200
+                border-red-400 hover:border-red-300 border-b-4
+                text-black
+                font-semibold
+                text-sm
+                py-2
+                px-3
+                flex flex-row
+                m-2"
+                    id={`${machineOption.id}`}
+                    key={`${machineOption.id}`}
+                    onClick={() => removeBalance(machineOption.price)}>
+                    {machineOption.temperature +
+                      ", " +
+                      machineOption.care +
+                      " (" +
+                      machineOption.condition +
+                      " Machine) - $" +
+                      machineOption.price}
+                  </button>
+                ))}
+            </section>
+            <section // MACHINE_OPTIONS_DRY
+              id="MACHINE_OPTIONS_DRY"></section>
+            <label className="flex justify-center mt-4">Dry Options:</label>
+            {machineOptions
+              .filter((option) => option.operation === "Dry")
+              .map((machineOption) => (
+                <button
+                  className="
+                rounded-lg
+                bg-red-300 hover:bg-red-200
+                border-red-400 hover:border-red-300 border-b-4
+                text-black
+                font-semibold
+                text-sm
+                py-2
+                px-3
+                flex flex-row
+                m-2"
+                  id={`${machineOption.id}`}
+                  key={`${machineOption.id}`}
+                  onClick={() => removeBalance(machineOption.price)}>
+                  {machineOption.temperature +
+                    ", " +
+                    machineOption.care +
+                    " " +
+                    machineOption.operation +
+                    " (" +
+                    machineOption.condition +
+                    " Machine) - $" +
+                    machineOption.price}
+                </button>
+              ))}
+          </section>
+        </section>
+        <section // SECTION_SUGGESTIONS
+          id="SECTION_SUGGESTIONS"
+          className="">
+          Sugestions:
+        </section>
+        <section // SECTION_TRANSACTIONS
+          id="SECTION_TRANSACTIONS">
+          <label>Transactions:</label>
+          <section // TRANSACTIONS
+            id="TRANSACTIONS"
+            className="flex flex-col justify-right">
+            {transactions.map((transaction, index) => (
+              <label
+                className={`flex justify-center w-full p-2 m-1 rounded-md ${
+                  transaction.value >= 0 ? "bg-green-100" : "bg-red-100"
+                }`}
+                key={`transaction+${index}`}>
+                {transaction.owner +
+                  (transaction.value >= 0
+                    ? ` added $${transaction.value}`
+                    : ` spent $${-transaction.value}`) +
+                  " on " +
+                  transaction.date.toLocaleString()}
+              </label>
+            ))}
+          </section>
+        </section>
+      </section>
+    </section>
   );
 }
