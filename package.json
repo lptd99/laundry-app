@@ -11,6 +11,7 @@
   "dependencies": {
     "@nextui-org/button": "^2.0.34",
     "@nextui-org/dropdown": "^2.1.26",
+    "firebase": "^10.12.2",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18"
