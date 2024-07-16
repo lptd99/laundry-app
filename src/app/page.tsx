@@ -50,7 +50,7 @@ export default function Home() {
               </button>
             </a>
             Plan your laundry trips efficiently, log your card balance activity,
-            define and get reminders on your preferred day for laundry.
+            set reminders for your preferred day for laundry.
           </li>
         </ul>
       </section>
