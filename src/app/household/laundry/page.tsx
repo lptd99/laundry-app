@@ -98,8 +98,12 @@ export default function Home() {
   }
 
   function addTransaction(owner: string, value: number, date: Date) {
+    const nextID =
+      transactions.length > 0
+        ? transactions[transactions.length - 1].id + 1
+        : 1;
     const transaction: Transaction = {
-      id: transactions.length,
+      id: nextID,
       owner: owner,
       value: value,
       date: date.getTime(),
