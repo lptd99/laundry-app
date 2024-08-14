@@ -18,10 +18,15 @@ interface Transaction {
   operation: string;
   date: number;
 }
+
+interface UserData {
+  balance: number;
+  transactions: Transaction[];
 }
 
 export default function Home() {
   const [balance, setBalance] = useState(0);
+  const [ownerUID, setOwnerUID] = useState("");
   const [owner, setOwner] = useState("");
   const [errorOnOwner, setErrorOnOwner] = useState(false);
 
@@ -29,6 +34,43 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState([] as string[]);
   const [acceptedBills, setAcceptedBills] = useState([] as number[]);
   const [machineOptions, setMachineOptions] = useState([] as MachineOption[]);
+
+  const getUserData = async (ownerUID: string) => {
+    const userRef = ref(db, `users/${ownerUID}`);
+    get(userRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const data: UserData = snapshot.val();
+          console.log(data);
+          setBalance(data.balance || 0);
+          setTransactions(data.transactions || []);
+        } else {
+          console.log("No data available, creating...");
+          set(userRef, {
+            balance: balance,
+            transactions: transactions,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const saveUserData = async (
+    ownerUID: string,
+    balance: number,
+    updatedTransactions: Transaction[]
+  ) => {
+    console.log("Saving user data for: ", ownerUID);
+    const newData = {
+      balance: balance,
+      transactions: updatedTransactions,
+    };
+
+    const userRef = ref(db, `users/${ownerUID}`);
+    set(userRef, newData);
+  };
 
   function getMachineOptions() {
     setMachineOptions([
@@ -109,7 +151,14 @@ export default function Home() {
       date: date.getTime(),
       operation: value >= 0 ? "add" : "remove",
     };
-    setTransactions([transaction, ...transactions]);
+    console.log("Adding transaction: ", transaction);
+
+    const updatedTransactions = [transaction, ...transactions];
+    const updatedBalance = balance + value;
+
+    setBalance(updatedBalance);
+    setTransactions(updatedTransactions);
+    saveUserData(ownerUID, updatedBalance, updatedTransactions);
   }
 
   function removeBalance(value: number) {
@@ -137,15 +186,24 @@ export default function Home() {
     }
   }
 
+  function getUser() {
+    const userUID = localStorage.getItem("userUID");
+    console.log("UserUID: ", userUID);
+
+    if (userUID) {
+      setOwnerUID(userUID);
+    }
+  }
   useEffect(() => {
+    getUser();
     getMachineOptions();
     getAcceptedBills();
-    humanizeMachineOptions();
-  }, []);
-
-  function humanizeMachineOptions() {
-    //
-  }
+  useEffect(() => {
+    if (ownerUID) {
+      getUserData(ownerUID);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ownerUID]); // Runs when ownerUID changes
 
   return (
     <section
