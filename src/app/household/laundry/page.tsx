@@ -16,7 +16,8 @@ interface Transaction {
   owner: string;
   value: number;
   operation: string;
-  date: Date;
+  date: number;
+}
 }
 
 export default function Home() {
@@ -95,7 +96,7 @@ export default function Home() {
       id: transactions.length,
       owner: owner,
       value: value,
-      date: date,
+      date: date.getTime(),
       operation: value >= 0 ? "add" : "remove",
     };
     setTransactions([transaction, ...transactions]);
@@ -249,20 +250,24 @@ export default function Home() {
           <section // TRANSACTIONS
             id="TRANSACTIONS"
             className="flex flex-col justify-right">
-            {transactions.map((transaction, index) => (
-              <label
-                className={`flex justify-center w-full p-2 m-1 rounded-md ${
-                  transaction.value >= 0 ? "bg-green-100" : "bg-red-100"
-                }`}
-                key={`transaction+${index}`}>
-                {transaction.owner +
-                  (transaction.value >= 0
-                    ? ` added $${transaction.value}`
-                    : ` spent $${-transaction.value}`) +
-                  " on " +
-                  transaction.date.toLocaleString()}
-              </label>
-            ))}
+            {transactions &&
+              transactions.length > 0 &&
+              transactions[0].id &&
+              transactions[0].date &&
+              transactions.map((transaction, index) => (
+                <label
+                  className={`flex justify-center w-full p-2 m-1 rounded-md ${
+                    transaction.value >= 0 ? "bg-green-100" : "bg-red-100"
+                  }`}
+                  key={`transaction+${index}`}>
+                  {transaction.owner +
+                    (transaction.value >= 0
+                      ? ` added $${transaction.value}`
+                      : ` spent $${-transaction.value}`) +
+                    " on " +
+                    new Date(transaction.date).toLocaleString()}
+                </label>
+              ))}
           </section>
         </section>
       </section>
