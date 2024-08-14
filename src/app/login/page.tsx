@@ -28,7 +28,7 @@ export default function Home() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await signIn(data.email, data.password);
-      console.log("User signed in, UID:", localStorage.getItem("user"));
+      console.log("User signed in, UID:", localStorage.getItem("userUID"));
 
       router.push("/dashboard");
     } catch (error) {
@@ -56,7 +56,7 @@ export default function Home() {
         email,
         password
       );
-      localStorage.setItem("user", JSON.stringify(userCredential.user.uid));
+      localStorage.setItem("userUID", JSON.stringify(userCredential.user.uid));
       localStorage.setItem(
         "userName",
         JSON.stringify(userCredential.user.displayName)
@@ -68,7 +68,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem("userUID");
     if (user) {
       setRender(false);
       router.push("/dashboard");
