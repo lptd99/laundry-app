@@ -1,5 +1,7 @@
 "use client";
 
+import { db } from "@/app/firebase/firebaseConfig";
+import { get, ref, set } from "firebase/database";
 import { useEffect, useState } from "react";
 
 interface MachineOption {
@@ -195,9 +197,20 @@ export default function Home() {
     }
   }
   useEffect(() => {
+    // if (!isOnline()) {
+    //   console.log("You are offline. Please check your internet connection.");
+    // } else {
+    //   console.log("You are online.");
+    // }
     getUser();
     getMachineOptions();
     getAcceptedBills();
+  }, []); // Runs only on mount
+
+  // const isOnline = () => {
+  //   return window.navigator.onLine;
+  // };
+
   useEffect(() => {
     if (ownerUID) {
       getUserData(ownerUID);
