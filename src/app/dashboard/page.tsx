@@ -14,7 +14,7 @@ export default function Home() {
   const signOutUser = async () => {
     try {
       await signOut(auth);
-      localStorage.removeItem("user");
+      localStorage.removeItem("userUID");
       router.push("/login");
       console.log("User signed out");
     } catch (error) {
@@ -22,8 +22,12 @@ export default function Home() {
     }
   };
 
+  const toLaundry = () => {
+    router.push("/household/laundry");
+  };
+
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem("userUID");
     const userName = localStorage.getItem("userName");
     if (user) {
       setRender(true);
@@ -39,6 +43,11 @@ export default function Home() {
         className="text-black text-md py-8 px-8 flex items-center justify-center">
         <section id="NAVBAR">
           <p>Welcome, {userName ? userName : "User"} !</p>
+          <button
+            onClick={toLaundry}
+            className="border-2 rounded-md p-1 pr-2 border-green-300">
+            Laundry Module
+          </button>
           <button
             onClick={signOutUser}
             className="border-2 rounded-md p-1 pr-2 border-gray-300">
