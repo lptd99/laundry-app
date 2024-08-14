@@ -22,7 +22,8 @@ interface Transaction {
 
 export default function Home() {
   const [balance, setBalance] = useState(0);
-  const [owner, setOwner] = useState("Someone");
+  const [owner, setOwner] = useState("");
+  const [errorOnOwner, setErrorOnOwner] = useState(false);
 
   const [transactions, setTransactions] = useState([] as Transaction[]);
   const [suggestions, setSuggestions] = useState([] as string[]);
@@ -87,7 +88,12 @@ export default function Home() {
   }
 
   function addBalance(value: number) {
-    setBalance(balance + value);
+    if (errorOnOwner) {
+      console.log("Please enter a valid user name.");
+      return;
+    }
+    const absoluteValue = value < 0 ? value * -1 : value;
+    setBalance(balance + absoluteValue);
     addTransaction(owner, value, new Date());
   }
 
@@ -103,8 +109,27 @@ export default function Home() {
   }
 
   function removeBalance(value: number) {
-    if (balance - value >= 0) {
-      addBalance(value * -1);
+    if (errorOnOwner) {
+      console.log("Please enter a valid user name.");
+      return;
+    }
+    const absoluteValue = value < 0 ? value * -1 : value;
+    if (balance - absoluteValue >= 0) {
+      setBalance(balance - absoluteValue);
+      addTransaction(owner, -absoluteValue, new Date());
+    } else {
+      console.log("Insufficient funds.");
+    }
+  }
+
+  function handleOwnerChange(event: React.ChangeEvent<HTMLInputElement>) {
+    let name = event.target.value;
+    setOwner(name);
+
+    if (name.trim().length > 1) {
+      setErrorOnOwner(false);
+    } else {
+      setErrorOnOwner(true);
     }
   }
 
@@ -144,9 +169,10 @@ export default function Home() {
             <input
               type="text"
               placeholder="User"
-              className="text-center w-32 border-2 border-gray-300 rounded-md"
-              onChange={(event) => setOwner(event.target.value)}></input>
-
+              className={`text-center w-32 border-2 ${
+                errorOnOwner ? "border-red-300" : "border-gray-300"
+              }  rounded-md`}
+              onChange={(event) => handleOwnerChange(event)}></input>
             <section // BALANCE_ADD_BUTTONS
               id="BALANCE_ADD_BUTTONS"
               className="flex flex-col items-center mx-10 my-10">
