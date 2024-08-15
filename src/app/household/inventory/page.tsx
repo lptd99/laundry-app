@@ -47,6 +47,7 @@
 // };
 
 export default function Inventory() {
+  //
   //   const [render, setRender] = useState(false);
   //   const router = useRouter();
   //   const [user, setUser] = useState<string>("");
