@@ -29,11 +29,11 @@ export default function UserManagementPage() {
 
   // Fetch users from backend (placeholder)
   useEffect(() => {
-    if (userUID && userUID.accessLevel === "admin") {
-      setRender(true);
-    } else {
-      router.push("/login");
-    }
+    // if (userUID && userUID.accessLevel === "admin") {
+    //   setRender(true);
+    // } else {
+    //   router.push("/login");
+    // }
     const fetchUsers = async () => {
       // Placeholder for fetching user data
       const fetchedUsers: User[] = [
@@ -55,23 +55,24 @@ export default function UserManagementPage() {
 
   return (
     render && (
-    <section id="PAGE">
-      <section id="USERS_LIST">
-        {users.map((user) => (
-          <section
-            key={user.email}
-            id="USER">
-            <h3>{user.name}</h3>
-            <p>{user.email}</p>
-            <button onClick={() => handleDelete(user.email)}>Delete</button>
-          </section>
-        ))}
+      <section id="PAGE">
+        <section id="USERS_LIST">
+          {users.map((user) => (
+            <section
+              key={user.email}
+              id="USER">
+              <h3>{user.name}</h3>
+              <p>{user.email}</p>
+              <button onClick={() => handleDelete(user.email)}>Delete</button>
+            </section>
+          ))}
+        </section>
+        <button
+          id="NEW_USER_BUTTON"
+          onClick={handleAddUserClick}>
+          <UserPlus />
+        </button>
       </section>
-      <button
-        id="NEW_USER_BUTTON"
-        onClick={handleAddUserClick}>
-        <UserPlus />
-      </button>
-    </section>
+    )
   );
 }
