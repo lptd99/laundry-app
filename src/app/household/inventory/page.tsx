@@ -1,18 +1,16 @@
 "use client";
 
-import { collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { db } from "../../firebase/firebaseConfig";
 
-const inventoryDB = collection(db, "inventory");
-inventoryDB.get().then((snapshot) => {
-  snapshot.forEach((doc) => {
-    console.log(doc.id, "=>", doc.data());
-  });
-});
-const inventoryUsers = collection(db, "inventory", "users");
+// const inventoryDB = collection(db, "inventory");
+// inventoryDB.get().then((snapshot) => {
+//   snapshot.forEach((doc) => {
+//     console.log(doc.id, "=>", doc.data());
+//   });
+// });
+// const inventoryUsers = collection(db, "inventory", "users");
 
 const mockDB = {
   users: ["user1"],
