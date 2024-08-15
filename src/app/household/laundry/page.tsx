@@ -205,6 +205,8 @@ export default function Home() {
     getUser();
     getMachineOptions();
     getAcceptedBills();
+    setErrorOnOwner(true);
+    setOwner("");
   }, []); // Runs only on mount
 
   // const isOnline = () => {
@@ -217,6 +219,14 @@ export default function Home() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerUID]); // Runs when ownerUID changes
+
+  // function fixFunction() {
+  //   const fixedBalance = 10.55;
+  //   const fixedTransactions: Transaction[] = [];
+  //   setBalance(fixedBalance);
+  //   setTransactions(fixedTransactions);
+  //   saveUserData(ownerUID, fixedBalance, fixedTransactions);
+  // }
 
   return (
     <section
@@ -270,6 +280,24 @@ export default function Home() {
                   Add ${bill}
                 </button>
               ))}
+
+              {/* <button
+                id={`BALANCE_FIX`}
+                key={`BALANCE_FIX`}
+                className="
+                rounded-lg
+                bg-green-300 hover:bg-green-200
+                border-green-400 hover:border-green-300 border-b-4
+                text-black
+                font-semibold
+                text-sm
+                py-2
+                px-4
+                flex flex-row justify-center
+                m-2 "
+                onClick={fixFunction}>
+                FIX
+              </button> */}
             </section>
           </section>
           <section // SECTION_MACHINE_OPTIONS
