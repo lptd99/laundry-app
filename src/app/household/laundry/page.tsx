@@ -188,13 +188,15 @@ export default function Home() {
     }
   }
 
-  function getUser() {
+  function getUserUID() {
     const userUID = localStorage.getItem("userUID");
     console.log("UserUID: ", userUID);
-
     if (userUID) {
       setOwnerUID(userUID);
-    }
+      return userUID;
+    } else {
+      console.log("No userUID found.");
+      return null;
   }
   useEffect(() => {
     // if (!isOnline()) {
