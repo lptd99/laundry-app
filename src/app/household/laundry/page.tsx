@@ -204,6 +204,7 @@ export default function Home() {
     } else {
       console.log("No userUID found.");
       return null;
+    }
   }
   useEffect(() => {
     // if (!isOnline()) {
@@ -221,7 +222,7 @@ export default function Home() {
     getAcceptedBills();
     setErrorOnOwner(true);
     setOwner("");
-  }, []); // Runs only on mount
+  }, [router]); // Runs only on mount
 
   // const isOnline = () => {
   //   return window.navigator.onLine;
