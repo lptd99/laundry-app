@@ -31,6 +31,7 @@ export default function Home() {
   const [ownerUID, setOwnerUID] = useState("");
   const [owner, setOwner] = useState("");
   const [errorOnOwner, setErrorOnOwner] = useState(false);
+  const [render, setRender] = useState(false);
 
   const [transactions, setTransactions] = useState([] as Transaction[]);
   const [suggestions, setSuggestions] = useState([] as string[]);
@@ -204,7 +205,12 @@ export default function Home() {
     // } else {
     //   console.log("You are online.");
     // }
-    getUser();
+    const userUID = getUserUID();
+    if (userUID) {
+      setRender(true);
+    } else {
+      router.push("/login");
+    }
     getMachineOptions();
     getAcceptedBills();
     setErrorOnOwner(true);
