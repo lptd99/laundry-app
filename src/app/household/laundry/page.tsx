@@ -228,51 +228,71 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerUID]); // Runs when ownerUID changes
 
-  // function fixFunction() {
-  //   const fixedBalance = 10.55;
-  //   const fixedTransactions: Transaction[] = [];
-  //   setBalance(fixedBalance);
-  //   setTransactions(fixedTransactions);
-  //   saveUserData(ownerUID, fixedBalance, fixedTransactions);
-  // }
+  function fixFunction() {
+    const fixedBalance = 10.55;
+    const fixedTransactions: Transaction[] = [];
+    setBalance(fixedBalance);
+    setTransactions(fixedTransactions);
+    saveUserData(ownerUID, fixedBalance, fixedTransactions);
+  }
 
   return (
-    <section
-      id="PAGE"
-      className="font-bold text-black text-md py-8 px-8 flex items-center justify-center">
-      <section // SECTIONS
-        id="SECTIONS"
-        className="m-4">
-        <section // SECTION_BALANCE
-          id="SECTION_BALANCE"
-          className="flex flex-row items-start">
-          <section // SECTION_BALANCE_INFO
-            id="SECTION_BALANCE_INFO"
-            className="flex flex-col items-center">
-            <label
-              id="BALANCE_LABEL"
-              className="text-xl font-semibold">
-              {`Current balance: ${
-                balance >= 0
-                  ? "$" + balance.toFixed(2)
-                  : "-$" + balance.toFixed(2).replace("-", "")
-              }`}
-            </label>
-            <label className="mt-8">User:</label>
-            <input
-              type="text"
-              placeholder="User"
-              className={`text-center w-32 border-2 ${
-                errorOnOwner ? "border-red-300" : "border-gray-300"
-              }  rounded-md`}
-              onChange={(event) => handleOwnerChange(event)}></input>
-            <section // BALANCE_ADD_BUTTONS
-              id="BALANCE_ADD_BUTTONS"
-              className="flex flex-col items-center mx-10 my-10">
-              {acceptedBills.map((bill) => (
+    render && (
+      <section
+        id="PAGE"
+        className="font-bold text-black text-md py-8 px-8 flex items-center justify-center">
+        <section // SECTIONS
+          id="SECTIONS"
+          className="m-4">
+          <section // SECTION_BALANCE
+            id="SECTION_BALANCE"
+            className="flex flex-row items-start">
+            <section // SECTION_BALANCE_INFO
+              id="SECTION_BALANCE_INFO"
+              className="flex flex-col items-center">
+              <label
+                id="BALANCE_LABEL"
+                className="text-xl font-semibold">
+                {`Current balance: ${
+                  balance >= 0
+                    ? "$" + balance.toFixed(2)
+                    : "-$" + balance.toFixed(2).replace("-", "")
+                }`}
+              </label>
+              <label className="mt-8">User:</label>
+              <input
+                type="text"
+                placeholder="User"
+                className={`text-center w-32 border-2 ${
+                  errorOnOwner ? "border-red-300" : "border-gray-300"
+                }  rounded-md`}
+                onChange={(event) => handleOwnerChange(event)}></input>
+              <section // BALANCE_ADD_BUTTONS
+                id="BALANCE_ADD_BUTTONS"
+                className="flex flex-col items-center mx-10 my-10">
+                {acceptedBills.map((bill) => (
+                  <button
+                    id={`BALANCE_ADD_${bill}`}
+                    key={`BALANCE_ADD_${bill}`}
+                    className="
+                rounded-lg
+                bg-green-300 hover:bg-green-200
+                border-green-400 hover:border-green-300 border-b-4
+                text-black
+                font-semibold
+                text-sm
+                py-2
+                px-4
+                flex flex-row justify-center
+                m-2 "
+                    onClick={() => addBalance(bill)}>
+                    Add ${bill}
+                  </button>
+                ))}
+
                 <button
-                  id={`BALANCE_ADD_${bill}`}
-                  key={`BALANCE_ADD_${bill}`}
+                  id={`BALANCE_FIX`}
+                  key={`BALANCE_FIX`}
                   className="
                 rounded-lg
                 bg-green-300 hover:bg-green-200
@@ -284,38 +304,52 @@ export default function Home() {
                 px-4
                 flex flex-row justify-center
                 m-2 "
-                  onClick={() => addBalance(bill)}>
-                  Add ${bill}
+                  onClick={fixFunction}>
+                  FIX
                 </button>
-              ))}
-
-              {/* <button
-                id={`BALANCE_FIX`}
-                key={`BALANCE_FIX`}
-                className="
+              </section>
+            </section>
+            <section // SECTION_MACHINE_OPTIONS
+              id="SECTION_MACHINE_OPTIONS"
+              className="flex flex-col items-center m-4">
+              <section // MACHINE_OPTIONS_WASH
+                id="MACHINE_OPTIONS_WASH">
+                <label className="flex justify-center mt-4">
+                  Wash Options:
+                </label>
+                {machineOptions
+                  .filter((machineOption) => machineOption.operation === "Wash")
+                  .map((machineOption) => (
+                    <button
+                      className="
                 rounded-lg
-                bg-green-300 hover:bg-green-200
-                border-green-400 hover:border-green-300 border-b-4
+                bg-red-300 hover:bg-red-200
+                border-red-400 hover:border-red-300 border-b-4
                 text-black
                 font-semibold
                 text-sm
                 py-2
-                px-4
-                flex flex-row justify-center
-                m-2 "
-                onClick={fixFunction}>
-                FIX
-              </button> */}
-            </section>
-          </section>
-          <section // SECTION_MACHINE_OPTIONS
-            id="SECTION_MACHINE_OPTIONS"
-            className="flex flex-col items-center m-4">
-            <section // MACHINE_OPTIONS_WASH
-              id="MACHINE_OPTIONS_WASH">
-              <label className="flex justify-center mt-4">Wash Options:</label>
+                px-3
+                flex flex-row
+                m-2"
+                      id={`${machineOption.id}`}
+                      key={`${machineOption.id}`}
+                      onClick={() => removeBalance(machineOption.price)}>
+                      {machineOption.temperature +
+                        ", " +
+                        machineOption.care +
+                        " (" +
+                        machineOption.condition +
+                        " Machine) - $" +
+                        machineOption.price}
+                    </button>
+                  ))}
+              </section>
+              <section // MACHINE_OPTIONS_DRY
+                id="MACHINE_OPTIONS_DRY"></section>
+              <label className="flex justify-center mt-4">Dry Options:</label>
               {machineOptions
-                .filter((machineOption) => machineOption.operation === "Wash")
+                .filter((option) => option.operation === "Dry")
                 .map((machineOption) => (
                   <button
                     className="
@@ -335,6 +369,8 @@ export default function Home() {
                     {machineOption.temperature +
                       ", " +
                       machineOption.care +
+                      " " +
+                      machineOption.operation +
                       " (" +
                       machineOption.condition +
                       " Machine) - $" +
@@ -342,72 +378,40 @@ export default function Home() {
                   </button>
                 ))}
             </section>
-            <section // MACHINE_OPTIONS_DRY
-              id="MACHINE_OPTIONS_DRY"></section>
-            <label className="flex justify-center mt-4">Dry Options:</label>
-            {machineOptions
-              .filter((option) => option.operation === "Dry")
-              .map((machineOption) => (
-                <button
-                  className="
-                rounded-lg
-                bg-red-300 hover:bg-red-200
-                border-red-400 hover:border-red-300 border-b-4
-                text-black
-                font-semibold
-                text-sm
-                py-2
-                px-3
-                flex flex-row
-                m-2"
-                  id={`${machineOption.id}`}
-                  key={`${machineOption.id}`}
-                  onClick={() => removeBalance(machineOption.price)}>
-                  {machineOption.temperature +
-                    ", " +
-                    machineOption.care +
-                    " " +
-                    machineOption.operation +
-                    " (" +
-                    machineOption.condition +
-                    " Machine) - $" +
-                    machineOption.price}
-                </button>
-              ))}
           </section>
-        </section>
-        <section // SECTION_SUGGESTIONS
-          id="SECTION_SUGGESTIONS"
-          className="">
-          Sugestions:
-        </section>
-        <section // SECTION_TRANSACTIONS
-          id="SECTION_TRANSACTIONS">
-          <label>Transactions:</label>
-          <section // TRANSACTIONS
-            id="TRANSACTIONS"
-            className="flex flex-col justify-right">
-            {transactions &&
-              transactions.length > 0 &&
-              transactions[0].id &&
-              transactions[0].date &&
-              transactions.map((transaction, index) => (
-                <label
-                  className={`flex justify-center w-full p-2 m-1 rounded-md ${
-                    transaction.value >= 0 ? "bg-green-100" : "bg-red-100"
-                  }`}
-                  key={`transaction+${index}`}>
-                  {transaction.owner +
-                    (transaction.value >= 0
-                      ? ` added $${transaction.value}`
-                      : ` spent $${-transaction.value}`) +
-                    " on " +
-                    new Date(transaction.date).toLocaleString()}
-                </label>
-              ))}
+          <section // SECTION_SUGGESTIONS
+            id="SECTION_SUGGESTIONS"
+            className="">
+            Sugestions:
+          </section>
+          <section // SECTION_TRANSACTIONS
+            id="SECTION_TRANSACTIONS">
+            <label>Transactions:</label>
+            <section // TRANSACTIONS
+              id="TRANSACTIONS"
+              className="flex flex-col justify-right">
+              {transactions &&
+                transactions.length > 0 &&
+                transactions[0].id &&
+                transactions[0].date &&
+                transactions.map((transaction, index) => (
+                  <label
+                    className={`flex justify-center w-full p-2 m-1 rounded-md ${
+                      transaction.value >= 0 ? "bg-green-100" : "bg-red-100"
+                    }`}
+                    key={`transaction+${index}`}>
+                    {transaction.owner +
+                      (transaction.value >= 0
+                        ? ` added $${transaction.value}`
+                        : ` spent $${-transaction.value}`) +
+                      " on " +
+                      new Date(transaction.date).toLocaleString()}
+                  </label>
+                ))}
+            </section>
           </section>
         </section>
       </section>
-    </section>
+    )
   );
 }
