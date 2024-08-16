@@ -1,23 +1,22 @@
 "use client";
 
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { auth } from "../firebase/firebaseConfig";
+import { auth } from "../../firebase/firebaseConfig";
 
 type Inputs = {
   email: string;
   password: string;
+  passwordConfirm: string;
 };
 
-export default function Login() {
+export default function SignUp() {
   const [render, setRender] = useState(false);
   const router = useRouter();
   const [user, setUser] = useState<string | null>(null);
+  const [noMatchError, setNoMatchError] = useState(false);
 
   const {
     register,
@@ -27,10 +26,14 @@ export default function Login() {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      await signIn(data.email, data.password);
-      console.log("User signed in, UID:", localStorage.getItem("userUID"));
+      if (data.password === data.passwordConfirm) {
+        await signUp(data.email, data.password);
+        console.log("User signed in, UID:", localStorage.getItem("userUID"));
 
-      router.push("/dashboard");
+        router.push("/dashboard");
+      } else {
+        setNoMatchError(true);
+      }
     } catch (error) {
       console.error("Error signing in:", error);
     }
@@ -44,32 +47,18 @@ export default function Login() {
         password
       );
       console.log("User signed up: ", userCredential.user);
+      router.push("/login");
     } catch (error) {
       console.error("Error signing up: ", error);
     }
   };
-
-  const signIn = async (email: string, password: string) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      localStorage.setItem("userUID", JSON.stringify(userCredential.user.uid));
-      localStorage.setItem(
-        "userName",
-        JSON.stringify(userCredential.user.displayName)
-      );
-      console.log("displayName:", userCredential.user.displayName);
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
+  const toLogin = () => {
+    router.push("/login");
   };
 
   useEffect(() => {
-    const user = localStorage.getItem("userUID");
-    if (user) {
+    const userUID = localStorage.getItem("userUID");
+    if (userUID) {
       setRender(false);
       router.push("/dashboard");
     } else {
@@ -77,17 +66,13 @@ export default function Login() {
     }
   }, [router]);
 
-  const toSignUp = () => {
-    router.push("/login/sign-up");
-  };
-
   return (
     render && (
       <section // PAGE
         id="PAGE"
         className="text-black text-md py-8 px-8 flex items-center justify-center">
         <section // LOGIN
-          id="LOGIN"
+          id="SIGN-UP"
           className="">
           <section // FORM
             id="FORM"
@@ -104,7 +89,7 @@ export default function Login() {
                 {...register("email", { required: true })}
               />
               {errors.email && (
-                <span className="text-red-400">Campo obrigatório</span>
+                <span className="text-red-400">Field required!</span>
               )}
 
               <label className="font-bold m-2">Password</label>
@@ -117,24 +102,42 @@ export default function Login() {
                 {...register("password", { required: true })}
               />
               {errors.password && (
-                <span className="text-red-400">Campo obrigatório</span>
+                <span className="text-red-400">Field required!</span>
+              )}
+              {noMatchError && (
+                <span className="text-red-400">Passwords do not match!</span>
+              )}
+
+              <label className="font-bold m-2">Confirm Password</label>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className={`px-2 m-2 border-2 ${
+                  errors.password ? "border-red-300" : "border-gray-300"
+                } rounded-md text-start`}
+                {...register("passwordConfirm", { required: true })}
+              />
+              {errors.passwordConfirm && (
+                <span className="text-red-400">Field required!</span>
+              )}
+              {noMatchError && (
+                <span className="text-red-400">Passwords do not match!</span>
               )}
 
               <button
                 type="submit"
-                className="flex flex-row items-center justify-center border-2 rounded-md p-1 pr-2 border-gray-300">
-                Login
+                className="flex flex-row items-center justify-center border-2 rounded-md p-1 pr-2 border-green-300">
+                Create Account
               </button>
             </form>
-          </section>
-          <section // OTHER
-            id="OTHER">
             <button
-              onClick={toSignUp}
-              className="flex flex-row items-center justify-center border-2 rounded-md p-1 pr-2 border-black-300">
-              Create Account
+              onClick={toLogin}
+              className="border-2 rounded-md p-1 pr-2 border-red-300">
+              Back to Login
             </button>
           </section>
+          <section // OTHER
+            id="OTHER"></section>
         </section>
       </section>
     )
