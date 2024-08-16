@@ -2,6 +2,7 @@
 
 import { db } from "@/app/firebase/firebaseConfig";
 import { get, ref, set } from "firebase/database";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface MachineOption {
@@ -32,6 +33,7 @@ export default function Home() {
   const [owner, setOwner] = useState("");
   const [errorOnOwner, setErrorOnOwner] = useState(false);
   const [render, setRender] = useState(false);
+  const router = useRouter();
 
   const [transactions, setTransactions] = useState([] as Transaction[]);
   const [suggestions, setSuggestions] = useState([] as string[]);
@@ -225,6 +227,10 @@ export default function Home() {
   //   return window.navigator.onLine;
   // };
 
+  function toDashboard() {
+    router.push("/dashboard");
+  }
+
   useEffect(() => {
     if (ownerUID) {
       getUserData(ownerUID);
@@ -248,6 +254,11 @@ export default function Home() {
         <section // SECTIONS
           id="SECTIONS"
           className="m-4">
+          <button // DASHBOARD_BUTTON
+            onClick={toDashboard}
+            className="border-2 rounded-md p-1 pr-2 border-gray-300">
+            Dashboard
+          </button>
           <section // SECTION_BALANCE
             id="SECTION_BALANCE"
             className="flex flex-row items-start">
