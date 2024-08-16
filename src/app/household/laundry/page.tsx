@@ -65,6 +65,10 @@ export default function Home() {
     balance: number,
     updatedTransactions: Transaction[]
   ) => {
+    if (!ownerUID) {
+      console.log("No ownerUID provided.");
+      return;
+    }
     console.log("Saving user data for: ", ownerUID);
     const newData = {
       balance: balance,
